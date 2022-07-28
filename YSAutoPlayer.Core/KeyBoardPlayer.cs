@@ -38,13 +38,16 @@ namespace YSAutoPlayer.Core
                 {
                     tasks.Add(Task.Run(async () =>
                     {
-                        var beat = 60000 / track.Beat;
+                        // 每拍所占时长
+                        var tick = 60000 / track.Beat;
                         foreach (var note in track)
                         {
                             cancellationToken.ThrowIfCancellationRequested();
+                            // 当前音符时长
+                            var delay = note.Value > 0 ? tick * note.Value : tick / -note.Value;
                             var code = NoteKeyCodeMap[note.Key];
                             PressKey(code);
-                            await Task.Delay(beat * note.Value, cancellationToken);
+                            await Task.Delay(tick * note.Value, cancellationToken);
                         }
                     }, cancellationToken));
                 }
