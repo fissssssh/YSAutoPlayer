@@ -1,7 +1,7 @@
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
-using YSAutoPlayer.Player;
 
 namespace YSAutoPlayer.Core.Test
 {
@@ -10,7 +10,7 @@ namespace YSAutoPlayer.Core.Test
         [Fact]
         public async Task PlayTest()
         {
-            var player = new KeyBoardPlayer();
+            IPlayer player = new KeyBoardPlayer();
             await player.PlayAsync(new MusicScore
             {
                 Title = "TEST",
@@ -25,7 +25,7 @@ namespace YSAutoPlayer.Core.Test
                         {Note.Si,1 },
                     }
                 }
-            });
+            },CancellationToken.None);
         }
     }
 }
