@@ -6,21 +6,15 @@
     public class MusicScore
     {
         public string? Title { get; set; }
+        public int Beat { get; set; }
         public IEnumerable<MusicTrack> Tracks { get; set; } = new List<MusicTrack>();
     }
 
     /// <summary>
     /// 音轨
     /// </summary>
-    public class MusicTrack : List<KeyValuePair<Note, int>>
+    public class MusicTrack : List<KeyValuePair<Note, double>>
     {
-        public int Beat { get; }
-
-        public MusicTrack(int beat)
-        {
-            Beat = beat;
-        }
-
-        public void Add(Note note, int meter) => Add(new KeyValuePair<Note, int>(note, meter));
+        public void Add(Note note, double meter) => Add(new KeyValuePair<Note, double>(note, meter));
     }
 }

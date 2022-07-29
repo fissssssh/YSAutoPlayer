@@ -2,6 +2,7 @@
 {
     public enum Note
     {
+        Zero,
         DoLow,
         ReLow,
         MiLow,

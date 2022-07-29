@@ -34,20 +34,23 @@ namespace YSAutoPlayer.Core
             try
             {
                 var tasks = new List<Task>();
+                // 每拍所占时长
+                var tick = 60000 / musicScore.Beat;
                 foreach (var track in musicScore.Tracks)
                 {
                     tasks.Add(Task.Run(async () =>
                     {
-                        // 每拍所占时长
-                        var tick = 60000 / track.Beat;
                         foreach (var note in track)
                         {
                             cancellationToken.ThrowIfCancellationRequested();
                             // 当前音符时长
-                            var delay = note.Value > 0 ? tick * note.Value : tick / -note.Value;
-                            var code = NoteKeyCodeMap[note.Key];
-                            PressKey(code);
-                            await Task.Delay(tick * note.Value, cancellationToken);
+                            var delay = (int)(tick * note.Value);
+                            if (note.Key != Note.Zero)
+                            {
+                                var code = NoteKeyCodeMap[note.Key];
+                                PressKey(code);
+                            }
+                            await Task.Delay(delay, cancellationToken);
                         }
                     }, cancellationToken));
                 }

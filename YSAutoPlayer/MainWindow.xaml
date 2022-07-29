@@ -5,7 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:YSAutoPlayer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-    </Grid>
+        Title="MainWindow" Height="450" Width="800" d:DataContext="{d:DesignInstance Type=local:MainWindow}">
+    <StackPanel DataContext="{Binding RelativeSource={RelativeSource AncestorType=local:MainWindow}}">
+        <DockPanel>
+            <Button DockPanel.Dock="Right" Click="Button_Click">Load</Button>
+            <TextBox Text="{Binding MusicScoreFile, Mode=OneWay}"></TextBox>
+        </DockPanel>
+    </StackPanel>
 </Window>

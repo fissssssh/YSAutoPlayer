@@ -15,7 +15,7 @@ namespace YSAutoPlayer.Core.Test
             {
                 Title = "TEST",
                 Tracks = new List<MusicTrack> {
-                    new MusicTrack(240) {
+                    new MusicTrack() {
                         {Note.Do,1 },
                         {Note.Re,1 },
                         {Note.Mi,1 },
@@ -25,7 +25,7 @@ namespace YSAutoPlayer.Core.Test
                         {Note.Si,1 },
                     }
                 }
-            },CancellationToken.None);
+            }, CancellationToken.None);
         }
     }
 }
