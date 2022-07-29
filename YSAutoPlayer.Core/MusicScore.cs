@@ -7,7 +7,7 @@
     {
         public string? Title { get; set; }
         public int Beat { get; set; }
-        public IEnumerable<MusicTrack> Tracks { get; set; } = new List<MusicTrack>();
+        public IReadOnlyCollection<MusicTrack> Tracks { get; set; } = new List<MusicTrack>();
     }
 
     /// <summary>
