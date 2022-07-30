@@ -14,6 +14,12 @@ using YSAutoPlayer.Core.Parser;
 
 namespace YSAutoPlayer
 {
+    public enum ContinuousPlayMode
+    {
+        Repeat,
+        Sequencial,
+        Random
+    }
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -32,7 +38,6 @@ namespace YSAutoPlayer
             public string Path { get; }
         }
 
-
         private const string MusicScoresFolder = "MusicScores";
 
         private HotKey? _hotKey;
@@ -42,6 +47,8 @@ namespace YSAutoPlayer
         private ObservableCollection<MusicScoreFile>? _musicScoreFiles;
         private MusicScoreFile? _selectedMusicScoreFile;
         private MusicScore? _loadedMusicScore;
+        private bool _isContinuousPlay = false;
+        private ContinuousPlayMode _continuousPlayMode = ContinuousPlayMode.Sequencial;
 
         public ObservableCollection<MusicScoreFile>? MusicScoreFiles { get => _musicScoreFiles; private set => SetProperty(ref _musicScoreFiles, value); }
         public MusicScoreFile? SelectedMusicScore
@@ -53,6 +60,9 @@ namespace YSAutoPlayer
             }
         }
         public MusicScore? LoadedMusicScore { get => _loadedMusicScore; set => SetProperty(ref _loadedMusicScore, value); }
+        public bool IsContinuousPlay { get => _isContinuousPlay; set => SetProperty(ref _isContinuousPlay, value); }
+        public IReadOnlyCollection<ContinuousPlayMode> ContinuousPlayModes { get; } = Enum.GetValues<ContinuousPlayMode>().Cast<ContinuousPlayMode>().ToList();
+        public ContinuousPlayMode ContinuousPlayMode { get => _continuousPlayMode; set => SetProperty(ref _continuousPlayMode, value); }
 
         public MainWindow()
         {
@@ -68,7 +78,58 @@ namespace YSAutoPlayer
                         cts = new CancellationTokenSource();
                         Task.Run(async () =>
                         {
-                            await PlayAsync(cts.Token);
+                            if (IsContinuousPlay)
+                            {
+                                while (true)
+                                {
+                                    await PlayAsync(cts.Token);
+                                    if (cts.IsCancellationRequested)
+                                    {
+                                        break;
+                                    }
+                                    if (ContinuousPlayMode == ContinuousPlayMode.Repeat)
+                                    {
+                                        continue;
+                                    }
+                                    else if (ContinuousPlayMode == ContinuousPlayMode.Sequencial)
+                                    {
+                                        if (MusicScoreFiles?.Any() ?? false && SelectedMusicScore != null)
+                                        {
+                                            var index = MusicScoreFiles.IndexOf(SelectedMusicScore!);
+                                            if (index < MusicScoreFiles.Count - 1)
+                                            {
+                                                index++;
+                                            }
+                                            else
+                                            {
+                                                index = 0;
+                                            }
+                                            SelectedMusicScore = MusicScoreFiles[index];
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (MusicScoreFiles?.Any() ?? false)
+                                        {
+                                            var index = Random.Shared.Next(MusicScoreFiles.Count);
+                                            SelectedMusicScore = MusicScoreFiles[index];
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    await Task.Delay(1000);
+                                }
+                            }
+                            else
+                            {
+                                await PlayAsync(cts.Token);
+                            }
                             cts = null;
                         }, cts.Token);
                     }

@@ -71,7 +71,7 @@ namespace YSAutoPlayer.Core.Parser
             }
             catch (Exception e)
             {
-                throw new MusicScoreParseException("解析YSAP文件失败", e);
+                throw new MusicScoreParseException($"解析YSAP文件失败，{e.Message}", e);
             }
         }
     }

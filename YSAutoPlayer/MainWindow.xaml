@@ -9,6 +9,10 @@
     <DockPanel DataContext="{Binding RelativeSource={RelativeSource AncestorType=local:MainWindow}}">
         <DockPanel DockPanel.Dock="Left" Width="200">
             <Button DockPanel.Dock="Top" Click="LoadMusicScoreList">Refresh</Button>
+            <DockPanel DockPanel.Dock="Bottom">
+                <CheckBox IsChecked="{Binding IsContinuousPlay}">连续弹奏</CheckBox>
+                <ComboBox ItemsSource="{Binding ContinuousPlayModes,Mode=OneWay}" SelectedItem="{Binding ContinuousPlayMode}"></ComboBox>
+            </DockPanel>
             <ListBox ItemsSource="{Binding MusicScoreFiles,Mode=OneWay}" SelectedItem="{Binding SelectedMusicScore}" DisplayMemberPath="Name"></ListBox>
         </DockPanel>
         <DockPanel>
