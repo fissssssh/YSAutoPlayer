@@ -1,6 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,19 +20,39 @@ namespace YSAutoPlayer
     [ObservableObject]
     public partial class MainWindow : Window
     {
+        public class MusicScoreFile
+        {
+            public MusicScoreFile(string name, string path)
+            {
+                Name = name;
+                Path = path;
+            }
+
+            public string Name { get; }
+            public string Path { get; }
+        }
+
+
+        private const string MusicScoresFolder = "MusicScores";
+
         private HotKey? _hotKey;
         private CancellationTokenSource? cts;
         private readonly IPlayer _player = new KeyBoardPlayer();
-        private MusicScore? _musicScore;
-        private string? _musicScoreFile;
-        private string? _musicScoreTitle;
-        private int? _musicScoreBeat;
-        private int? _musicScoreTracksCount;
 
-        public string? MusicScoreFile { get => _musicScoreFile; private set => SetProperty(ref _musicScoreFile, value); }
-        public string? MusicScoreTitle { get => _musicScoreTitle; private set => SetProperty(ref _musicScoreTitle, value); }
-        public int? MusicScoreBeat { get => _musicScoreBeat; private set => SetProperty(ref _musicScoreBeat, value); }
-        public int? MusicScoreTracksCount { get => _musicScoreTracksCount; private set => SetProperty(ref _musicScoreTracksCount, value); }
+        private ObservableCollection<MusicScoreFile>? _musicScoreFiles;
+        private MusicScoreFile? _selectedMusicScoreFile;
+        private MusicScore? _loadedMusicScore;
+
+        public ObservableCollection<MusicScoreFile>? MusicScoreFiles { get => _musicScoreFiles; private set => SetProperty(ref _musicScoreFiles, value); }
+        public MusicScoreFile? SelectedMusicScore
+        {
+            get => _selectedMusicScoreFile; set
+            {
+                LoadMusicScore(value?.Path);
+                SetProperty(ref _selectedMusicScoreFile, value);
+            }
+        }
+        public MusicScore? LoadedMusicScore { get => _loadedMusicScore; set => SetProperty(ref _loadedMusicScore, value); }
 
         public MainWindow()
         {
@@ -53,6 +77,7 @@ namespace YSAutoPlayer
                         cts.Cancel();
                     }
                 };
+                LoadMusicScoreList(s, e);
             };
             Unloaded += (s, e) =>
             {
@@ -61,34 +86,38 @@ namespace YSAutoPlayer
         }
         private async Task PlayAsync(CancellationToken cancellationToken)
         {
-            if (_musicScore == null)
+            if (LoadedMusicScore == null)
             {
                 return;
             }
-            await _player.PlayAsync(_musicScore, cancellationToken);
+            await _player.PlayAsync(LoadedMusicScore, cancellationToken);
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private void LoadMusicScoreList(object sender, RoutedEventArgs e)
         {
-            var ofd = new OpenFileDialog
+            if (!Directory.Exists(MusicScoresFolder))
             {
-                Filter = "YSAP 文件|*.ysap"
-            };
-            if (ofd.ShowDialog() ?? false)
+                Directory.CreateDirectory(MusicScoresFolder);
+            }
+            var files = Directory.GetFiles(MusicScoresFolder, "*.ysap");
+            MusicScoreFiles = new ObservableCollection<MusicScoreFile>(files.Select(x => new MusicScoreFile(Path.GetFileNameWithoutExtension(x), x)));
+        }
+
+        private async void LoadMusicScore(string? filename)
+        {
+            try
             {
-                try
+                if (filename == null)
                 {
-                    var parser = new YSAPFileScoreParser(ofd.FileName);
-                    _musicScore = await parser.ParseAsync();
-                    MusicScoreFile = ofd.FileName;
-                    MusicScoreTitle = _musicScore.Title;
-                    MusicScoreBeat = _musicScore.Beat;
-                    MusicScoreTracksCount = _musicScore.Tracks.Count;
+                    LoadedMusicScore = null;
+                    return;
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "加载YSAP文件失败", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+                var parser = new YSAPFileScoreParser(filename);
+                LoadedMusicScore = await parser.ParseAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "加载YSAP文件失败", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

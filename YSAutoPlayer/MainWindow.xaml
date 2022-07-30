@@ -5,16 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:YSAutoPlayer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" d:DataContext="{d:DesignInstance Type=local:MainWindow}">
-    <StackPanel DataContext="{Binding RelativeSource={RelativeSource AncestorType=local:MainWindow}}">
-        <DockPanel>
-            <Button DockPanel.Dock="Right" Click="Button_Click">Load YSAP</Button>
-            <TextBox Text="{Binding MusicScoreFile,Mode=OneWay}"></TextBox>
+        Title="YS Auto Player" Height="450" Width="800" d:DataContext="{d:DesignInstance Type=local:MainWindow}">
+    <DockPanel DataContext="{Binding RelativeSource={RelativeSource AncestorType=local:MainWindow}}">
+        <DockPanel DockPanel.Dock="Left" Width="200">
+            <Button DockPanel.Dock="Top" Click="LoadMusicScoreList">Refresh</Button>
+            <ListBox ItemsSource="{Binding MusicScoreFiles,Mode=OneWay}" SelectedItem="{Binding SelectedMusicScore}" DisplayMemberPath="Name"></ListBox>
         </DockPanel>
-        <StackPanel>
-            <TextBlock Text="{Binding MusicScoreTitle,Mode=OneWay}" />
-            <TextBlock Text="{Binding MusicScoreBeat,Mode=OneWay}" />
-            <TextBlock Text="{Binding MusicScoreTracksCount,Mode=OneWay}" />
-        </StackPanel>
-    </StackPanel>
+        <DockPanel>
+            <StackPanel>
+                <TextBox IsReadOnly="True" Text="{Binding SelectedMusicScore.Path,Mode=OneWay}"></TextBox>
+                <TextBlock Text="{Binding LoadedMusicScore.Title,Mode=OneWay}" />
+                <TextBlock Text="{Binding LoadedMusicScore.Beat,Mode=OneWay}" />
+                <TextBlock Text="{Binding LoadedMusicScore.Tracks.Count,Mode=OneWay}" />
+            </StackPanel>
+        </DockPanel>
+    </DockPanel>
 </Window>
