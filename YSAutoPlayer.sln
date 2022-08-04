@@ -3,15 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YSAutoPlayer", "YSAutoPlayer\YSAutoPlayer.csproj", "{5BD39EAD-39C3-437A-8DC1-57E2896581C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YSAutoPlayer", "YSAutoPlayer\YSAutoPlayer.csproj", "{5BD39EAD-39C3-437A-8DC1-57E2896581C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YSAutoPlayer.Core", "YSAutoPlayer.Core\YSAutoPlayer.Core.csproj", "{7BAEE192-9287-4B15-B40A-90A34657891C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YSAutoPlayer.Core", "YSAutoPlayer.Core\YSAutoPlayer.Core.csproj", "{7BAEE192-9287-4B15-B40A-90A34657891C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6F37A5D0-AEFB-4144-B130-BEF32CB48883}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E2516EB0-E890-4C64-93B8-932182B3D84C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YSAutoPlayer.Core.Test", "YSAutoPlayer.Core.Test\YSAutoPlayer.Core.Test.csproj", "{6B2E62D1-6F92-4AD9-9E64-64E4E652C17F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YSAutoPlayer.Core.Test", "YSAutoPlayer.Core.Test\YSAutoPlayer.Core.Test.csproj", "{6B2E62D1-6F92-4AD9-9E64-64E4E652C17F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5F00D947-9466-4C91-AB9F-51D5BE1F5EA3}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
