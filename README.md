@@ -6,7 +6,7 @@ XX 游戏弹琴机
 
 先安装[.NET 6 桌面运行时](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-6.0.7-windows-x64-installer)
 
-将曲谱到 MusicScores 文件夹下, 重新打开程序会自动识别, 或者点击 refresh 按钮识别
+将曲谱放到 MusicScores 文件夹下, 重新打开程序会自动识别, 或者点击 refresh 按钮识别
 
 弹奏键为<kbd>F8</kbd>, 按下开始弹奏, 再次按下可停止弹奏
 
