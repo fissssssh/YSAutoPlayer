@@ -70,7 +70,7 @@ namespace YSAutoPlayer
             var handle = new WindowInteropHelper(this).Handle;
             Loaded += (s, e) =>
             {
-                _hotKey = new HotKey(80, handle); // register P as  hotkey of play
+                _hotKey = new HotKey(0x77, handle); // register P as  hotkey of play
                 _hotKey.HotKeyPressed += k =>
                 {
                     if (cts == null || cts.IsCancellationRequested)
