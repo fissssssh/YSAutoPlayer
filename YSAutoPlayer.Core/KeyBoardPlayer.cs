@@ -36,25 +36,38 @@ namespace YSAutoPlayer.Core
                 var tasks = new List<Task>();
                 // 每拍所占时长
                 var tick = 60000 / musicScore.Beat;
+                var trackInOne = new SortedDictionary<double, IList<Note>>();
                 foreach (var track in musicScore.Tracks)
                 {
-                    tasks.Add(Task.Run(async () =>
+                    var current = 0d;
+                    foreach (var note in track)
                     {
-                        foreach (var note in track)
+                        current += note.Value;
+                        cancellationToken.ThrowIfCancellationRequested();
+                        if (!trackInOne.TryGetValue(current, out var notes))
                         {
-                            cancellationToken.ThrowIfCancellationRequested();
-                            // 当前音符时长
-                            var delay = (int)(tick * note.Value);
-                            if (note.Key != Note.Zero)
-                            {
-                                var code = NoteKeyCodeMap[note.Key];
-                                PressKey(code);
-                            }
-                            await Task.Delay(delay, cancellationToken);
+                            notes = new List<Note>();
+                            trackInOne[current] = notes;
                         }
-                    }, cancellationToken));
+                        notes.Add(note.Key);
+                    }
                 }
-                await Task.WhenAll(tasks);
+                var last = 0d;
+                foreach (var notes in trackInOne)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var delay = (int)(tick * (notes.Key - last));
+                    await Task.WhenAll(notes.Value.Select(note => Task.Run(() =>
+                    {
+                        if (note != Note.Zero)
+                        {
+                            var code = NoteKeyCodeMap[note];
+                            PressKey(code);
+                        }
+                    }, cancellationToken)));
+                    await Task.Delay(delay, cancellationToken);
+                    last = notes.Key;
+                }
             }
             catch (OperationCanceledException)
             {
