@@ -57,7 +57,7 @@ namespace YSAutoPlayer.Core
                 {
                     cancellationToken.ThrowIfCancellationRequested();
                     var delay = (int)(tick * (notes.Key - last));
-                    await Task.WhenAll(notes.Value.Select(note => Task.Run(() =>
+                    await Task.WhenAll(notes.Value.Distinct().Select(note => Task.Run(() =>
                     {
                         if (note != Note.Zero)
                         {

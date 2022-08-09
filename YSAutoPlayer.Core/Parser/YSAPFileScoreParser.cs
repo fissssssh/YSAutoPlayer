@@ -31,38 +31,15 @@ namespace YSAutoPlayer.Core.Parser
                     var track = new MusicTrack();
                     foreach (var item in items)
                     {
-                        var match = Regex.Match(item, @"^(?<note>[01234567])(?<level>[`\.])?(\((?<meter>[\d\.]*)\))?$");
-                        var note = match.Groups["note"].Value switch
+                        try
                         {
-                            "0" => Note.Zero,
-                            "1" => Note.Do,
-                            "2" => Note.Re,
-                            "3" => Note.Mi,
-                            "4" => Note.Fa,
-                            "5" => Note.Sol,
-                            "6" => Note.La,
-                            "7" => Note.Si,
-                            _ => throw new InvalidOperationException()
-                        };
-                        if (note != Note.Zero)
-                        {
-                            var level = match.Groups["level"].Value;
-                            if (level == "`")
-                            {
-                                note += 7;
-                            }
-                            else if (level == ".")
-                            {
-                                note -= 7;
-                            }
+                            var (note, meter) = ParseNote(item);
+                            track.Add(note, meter);
                         }
-                        double meter = 1;
-                        var meterString = match.Groups["meter"].Value;
-                        if (!string.IsNullOrEmpty(meterString))
+                        catch (Exception e)
                         {
-                            meter = double.Parse(meterString);
+                            throw new MusicScoreParseException($"解析YSAP文件音符失败，音符：{item}。{e.Message}", e);
                         }
-                        track.Add(note, meter);
                     }
                     tracks.Add(track);
                 }
@@ -73,6 +50,42 @@ namespace YSAutoPlayer.Core.Parser
             {
                 throw new MusicScoreParseException($"解析YSAP文件失败，{e.Message}", e);
             }
+        }
+
+        private (Note, double) ParseNote(string noteStr)
+        {
+            var match = Regex.Match(noteStr, @"^(?<note>[01234567])(?<level>[+-])?(?<meter>[\d\.]*)?$");
+            var note = match.Groups["note"].Value switch
+            {
+                "0" => Note.Zero,
+                "1" => Note.Do,
+                "2" => Note.Re,
+                "3" => Note.Mi,
+                "4" => Note.Fa,
+                "5" => Note.Sol,
+                "6" => Note.La,
+                "7" => Note.Si,
+                _ => throw new InvalidOperationException()
+            };
+            if (note != Note.Zero)
+            {
+                var level = match.Groups["level"].Value;
+                if (level == "+")
+                {
+                    note += 7;
+                }
+                else if (level == "-")
+                {
+                    note -= 7;
+                }
+            }
+            double meter = 1;
+            var meterString = match.Groups["meter"].Value;
+            if (!string.IsNullOrEmpty(meterString))
+            {
+                meter = double.Parse(meterString);
+            }
+            return (note, meter);
         }
     }
 }

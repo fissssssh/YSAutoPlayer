@@ -5,7 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <Version>$(VersionPrefix)0.1.1</Version>
+    <Version>$(VersionPrefix)0.1.2</Version>
     <Authors>fissssssh</Authors>
     <Company>fissssssh</Company>
     <PackageProjectUrl>https://github.com/fissssssh/YSAutoPlayer</PackageProjectUrl>
@@ -17,6 +17,18 @@
 
   <ItemGroup>
     <ProjectReference Include="..\YSAutoPlayer.Core\YSAutoPlayer.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="MusicScores\友谊地久天长.ysap">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="MusicScores\小星星.ysap">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="MusicScores\让风告诉你.ysap">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
