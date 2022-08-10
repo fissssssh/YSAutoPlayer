@@ -9,19 +9,20 @@
     <DockPanel>
         <DockPanel DockPanel.Dock="Left" Width="200">
             <Button DockPanel.Dock="Top" Command="{Binding LoadMusicScoreListCommand}">Refresh</Button>
-            <DockPanel DockPanel.Dock="Bottom">
-                <CheckBox IsChecked="{Binding IsContinuousPlay}">连续弹奏</CheckBox>
-                <ComboBox ItemsSource="{Binding ContinuousPlayModes,Mode=OneWay}" SelectedItem="{Binding ContinuousPlayMode}"></ComboBox>
-            </DockPanel>
+            <CheckBox IsChecked="{Binding IsContinuousPlay}" VerticalContentAlignment="Center"  DockPanel.Dock="Bottom">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center">连续</TextBlock>
+                    <ComboBox VerticalAlignment="Center" ItemsSource="{Binding ContinuousPlayModes,Mode=OneWay}" SelectedValuePath="Value" DisplayMemberPath="Name" SelectedValue="{Binding ContinuousPlayMode}"/>
+                    <TextBlock VerticalAlignment="Center">弹奏</TextBlock>
+                </StackPanel>
+            </CheckBox>
             <ListBox ItemsSource="{Binding MusicScoreFiles,Mode=OneWay}" SelectedItem="{Binding SelectedMusicScore}" DisplayMemberPath="Name"></ListBox>
         </DockPanel>
-        <DockPanel>
-            <StackPanel>
-                <TextBox IsReadOnly="True" Text="{Binding SelectedMusicScore.Path,Mode=OneWay}"></TextBox>
-                <TextBlock Text="{Binding LoadedMusicScore.Title,Mode=OneWay}" />
-                <TextBlock Text="{Binding LoadedMusicScore.Beat,Mode=OneWay}" />
-                <TextBlock Text="{Binding LoadedMusicScore.Tracks.Count,Mode=OneWay}" />
-            </StackPanel>
-        </DockPanel>
+        <StackPanel>
+            <TextBox IsReadOnly="True" Text="{Binding SelectedMusicScore.Path,Mode=OneWay}"></TextBox>
+            <TextBlock Text="{Binding LoadedMusicScore.Title,Mode=OneWay}" />
+            <TextBlock Text="{Binding LoadedMusicScore.Beat,Mode=OneWay}" />
+            <TextBlock Text="{Binding LoadedMusicScore.Tracks.Count,Mode=OneWay}" />
+        </StackPanel>
     </DockPanel>
 </Window>

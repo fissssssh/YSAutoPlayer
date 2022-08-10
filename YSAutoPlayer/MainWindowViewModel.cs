@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -11,18 +12,33 @@ using System.Threading.Tasks;
 using System.Windows;
 using YSAutoPlayer.Core;
 using YSAutoPlayer.Core.Parser;
+using YSAutoPlayer.Extensions;
 
 namespace YSAutoPlayer
 {
     public enum ContinuousPlayMode
     {
+        [Description("循环")]
         Repeat,
+        [Description("顺序")]
         Sequencial,
+        [Description("随机")]
         Random
     }
 
     public class MainWindowViewModel : ObservableObject
     {
+        public class SelectionItem<T>
+        {
+            public SelectionItem(string name, T value)
+            {
+                Name = name;
+                Value = value;
+            }
+
+            public string Name { get; set; }
+            public T Value { get; set; }
+        }
         public class MusicScoreFile
         {
             public MusicScoreFile(string name, string path)
@@ -58,7 +74,7 @@ namespace YSAutoPlayer
         }
         public MusicScore? LoadedMusicScore { get => _loadedMusicScore; set => SetProperty(ref _loadedMusicScore, value); }
         public bool IsContinuousPlay { get => _isContinuousPlay; set => SetProperty(ref _isContinuousPlay, value); }
-        public IReadOnlyCollection<ContinuousPlayMode> ContinuousPlayModes { get; } = Enum.GetValues<ContinuousPlayMode>().ToList();
+        public IReadOnlyCollection<SelectionItem<ContinuousPlayMode>> ContinuousPlayModes { get; } = Enum.GetValues<ContinuousPlayMode>().Select(x => new SelectionItem<ContinuousPlayMode>(x.Description(), x)).ToList();
         public ContinuousPlayMode ContinuousPlayMode { get => _continuousPlayMode; set => SetProperty(ref _continuousPlayMode, value); }
         public IRelayCommand LoadMusicScoreListCommand { get; }
         public MainWindowViewModel()
